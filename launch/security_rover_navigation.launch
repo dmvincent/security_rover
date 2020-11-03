@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find security_rover)/worlds/home.world"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+  <!-- Spawn the Rover -->
+  <include file="$(find security_rover)/launch/spawn_urdf.launch">
+      <arg name="x" value="0.0"/>
+      <arg name="y" value="0.0"/>
+      <arg name="z" value="0.09875"/>
+      <arg name="urdf_robot_file" value="$(find security_rover)/urdf/security_rover.urdf"/>
+      <arg name="robot_name" value="security_rover"/>
+  </include>
+
+  <!-- send fake joint values -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+  <!-- Combine joint values -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  <!-- Launch node to publish robot odometry to /odom -->
+  <node name="odom_publisher" pkg="security_rover" type="robot_publisher.py" />
+
+  <!-- Startup the controller -->
+  <include file="$(find rover_control)/launch/rover_control.launch"/>
+
+  <!-- Startup Rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find security_rover)/slam_navigation.rviz"/>
+
+  <!-- Load the map -->
+  <arg name="map_file" default="$(find security_rover)/maps/my_map.yaml"/>                                           
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!-- Startup node to listen in on /cmd/vel and publish commands to wheel motors -->
+  <node name="wheel_drivers" pkg="security_rover" type="wheel_drivers.py"/>
+  
+  <!--- Run AMCL -->
+  <include file="$(find security_rover)/launch/amcl.launch" />
+                                                                             
+  <!--- Run Move Base -->
+  <include file="$(find security_rover)/launch/move_base.launch" />-->
+
+</launch>
