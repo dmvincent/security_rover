@@ -49,11 +49,19 @@
 
   <!-- Startup node to listen in on /cmd/vel and publish commands to wheel motors -->
   <node name="wheel_drivers" pkg="security_rover" type="wheel_drivers.py"/>
-  
+
   <!--- Run AMCL -->
   <include file="$(find security_rover)/launch/amcl.launch" />
                                                                              
   <!--- Run Move Base -->
   <include file="$(find security_rover)/launch/move_base.launch" />-->
+
+  <!-- Startup OpenCV Processing -->
+  <node name="opencv_processing" pkg="security_rover" type="img_processing_controller.py"/>
+
+  <!-- Startup rqt_image_view to view opencv output -->
+  <node name="view_opencv_output" pkg="rqt_image_view" type="rqt_image_view">
+  <remap from="image" to="/hsv_image"/>
+  </node>
 
 </launch>

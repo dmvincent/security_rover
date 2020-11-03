@@ -24,7 +24,10 @@ find_package(catkin REQUIRED COMPONENTS
   move_base
   amcl 
   gmapping
-  map_server 
+  map_server
+  cv_bridge
+  sensor_msgs
+  std_msgs 
 )
 
 ## System dependencies are found with CMake's conventions
