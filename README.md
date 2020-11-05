@@ -8,4 +8,4 @@ DO NOT CHANGE THE LINEAR OR ANGULAR SPEED!
 Use security_rover_navigation.launch to use Rviz to pass goal positions with the
 "2D Nav Goal" button and watch as the rover navigates autonomously. This launch file
 also starts up an HSV color filter demonstrating OpenCV image processing.
-[img]https://i.imgur.com/SdeerUE.gif[/img]
+![Imgure Image](https://i.imgur.com/SdeerUE.gif)
